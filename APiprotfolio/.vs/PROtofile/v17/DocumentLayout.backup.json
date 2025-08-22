@@ -1,0 +1,213 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\projact\\PROtofile\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{53E9F926-9D49-430B-A22B-3E2206DD69F0}|PROtofile.csproj|e:\\projact\\protofile\\controllers\\messagescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53E9F926-9D49-430B-A22B-3E2206DD69F0}|PROtofile.csproj|solutionrelative:controllers\\messagescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53E9F926-9D49-430B-A22B-3E2206DD69F0}|PROtofile.csproj|e:\\projact\\protofile\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53E9F926-9D49-430B-A22B-3E2206DD69F0}|PROtofile.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53E9F926-9D49-430B-A22B-3E2206DD69F0}|PROtofile.csproj|e:\\projact\\protofile\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{53E9F926-9D49-430B-A22B-3E2206DD69F0}|PROtofile.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53E9F926-9D49-430B-A22B-3E2206DD69F0}|PROtofile.csproj|e:\\projact\\protofile\\date\\dtos\\messagelistdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53E9F926-9D49-430B-A22B-3E2206DD69F0}|PROtofile.csproj|solutionrelative:date\\dtos\\messagelistdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53E9F926-9D49-430B-A22B-3E2206DD69F0}|PROtofile.csproj|e:\\projact\\protofile\\controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53E9F926-9D49-430B-A22B-3E2206DD69F0}|PROtofile.csproj|solutionrelative:controllers\\chatcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53E9F926-9D49-430B-A22B-3E2206DD69F0}|PROtofile.csproj|e:\\projact\\protofile\\date\\dtos\\chatdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53E9F926-9D49-430B-A22B-3E2206DD69F0}|PROtofile.csproj|solutionrelative:date\\dtos\\chatdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53E9F926-9D49-430B-A22B-3E2206DD69F0}|PROtofile.csproj|e:\\projact\\protofile\\date\\dtos\\messagecreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53E9F926-9D49-430B-A22B-3E2206DD69F0}|PROtofile.csproj|solutionrelative:date\\dtos\\messagecreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53E9F926-9D49-430B-A22B-3E2206DD69F0}|PROtofile.csproj|e:\\projact\\protofile\\date\\models\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53E9F926-9D49-430B-A22B-3E2206DD69F0}|PROtofile.csproj|solutionrelative:date\\models\\message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53E9F926-9D49-430B-A22B-3E2206DD69F0}|PROtofile.csproj|e:\\projact\\protofile\\date\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53E9F926-9D49-430B-A22B-3E2206DD69F0}|PROtofile.csproj|solutionrelative:date\\appdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53E9F926-9D49-430B-A22B-3E2206DD69F0}|PROtofile.csproj|e:\\projact\\protofile\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{53E9F926-9D49-430B-A22B-3E2206DD69F0}|PROtofile.csproj|solutionrelative:properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{53E9F926-9D49-430B-A22B-3E2206DD69F0}|PROtofile.csproj|e:\\projact\\protofile\\migrations\\20250808191344_message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{53E9F926-9D49-430B-A22B-3E2206DD69F0}|PROtofile.csproj|solutionrelative:migrations\\20250808191344_message.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1167038585:0:{83107a3e-496a-485e-b455-16ddb978e55e}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:681939648:0:{83107a3e-496a-485e-b455-16ddb978e55e}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MessagesController.cs",
+              "DocumentMoniker": "E:\\projact\\PROtofile\\Controllers\\MessagesController.cs",
+              "RelativeDocumentMoniker": "Controllers\\MessagesController.cs",
+              "ToolTip": "E:\\projact\\PROtofile\\Controllers\\MessagesController.cs",
+              "RelativeToolTip": "Controllers\\MessagesController.cs",
+              "ViewState": "AgIAACsAAAAAAAAAAAAcwDkAAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-12T07:03:08.594Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ChatDto.cs",
+              "DocumentMoniker": "E:\\projact\\PROtofile\\Date\\DTOS\\ChatDto.cs",
+              "RelativeDocumentMoniker": "Date\\DTOS\\ChatDto.cs",
+              "ToolTip": "E:\\projact\\PROtofile\\Date\\DTOS\\ChatDto.cs",
+              "RelativeToolTip": "Date\\DTOS\\ChatDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-11T09:31:47.412Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "AppDbcontext.cs",
+              "DocumentMoniker": "E:\\projact\\PROtofile\\Date\\AppDbcontext.cs",
+              "RelativeDocumentMoniker": "Date\\AppDbcontext.cs",
+              "ToolTip": "E:\\projact\\PROtofile\\Date\\AppDbcontext.cs",
+              "RelativeToolTip": "Date\\AppDbcontext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-08T19:07:07.634Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MessageListDto.cs",
+              "DocumentMoniker": "E:\\projact\\PROtofile\\Date\\DTOS\\MessageListDto.cs",
+              "RelativeDocumentMoniker": "Date\\DTOS\\MessageListDto.cs",
+              "ToolTip": "E:\\projact\\PROtofile\\Date\\DTOS\\MessageListDto.cs",
+              "RelativeToolTip": "Date\\DTOS\\MessageListDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAvAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-08T19:05:59.334Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "MessageCreateDto.cs",
+              "DocumentMoniker": "E:\\projact\\PROtofile\\Date\\DTOS\\MessageCreateDto.cs",
+              "RelativeDocumentMoniker": "Date\\DTOS\\MessageCreateDto.cs",
+              "ToolTip": "E:\\projact\\PROtofile\\Date\\DTOS\\MessageCreateDto.cs",
+              "RelativeToolTip": "Date\\DTOS\\MessageCreateDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-08T19:04:33.694Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Message.cs",
+              "DocumentMoniker": "E:\\projact\\PROtofile\\Date\\Models\\Message.cs",
+              "RelativeDocumentMoniker": "Date\\Models\\Message.cs",
+              "ToolTip": "E:\\projact\\PROtofile\\Date\\Models\\Message.cs",
+              "RelativeToolTip": "Date\\Models\\Message.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAA2wBgAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-08T19:02:23.469Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "E:\\projact\\PROtofile\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "E:\\projact\\PROtofile\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAA2wD8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-08T18:49:08.484Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "E:\\projact\\PROtofile\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "E:\\projact\\PROtofile\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-08-08T18:33:09.103Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ChatController.cs",
+              "DocumentMoniker": "E:\\projact\\PROtofile\\Controllers\\ChatController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ChatController.cs",
+              "ToolTip": "E:\\projact\\PROtofile\\Controllers\\ChatController.cs",
+              "RelativeToolTip": "Controllers\\ChatController.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAAAcwAUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-11T09:33:29.641Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "20250808191344_Message.cs",
+              "DocumentMoniker": "E:\\projact\\PROtofile\\Migrations\\20250808191344_Message.cs",
+              "RelativeDocumentMoniker": "Migrations\\20250808191344_Message.cs",
+              "ToolTip": "E:\\projact\\PROtofile\\Migrations\\20250808191344_Message.cs",
+              "RelativeToolTip": "Migrations\\20250808191344_Message.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-08T19:13:44.485Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "E:\\projact\\PROtofile\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "Properties\\launchSettings.json",
+              "ToolTip": "E:\\projact\\PROtofile\\Properties\\launchSettings.json",
+              "RelativeToolTip": "Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-08-08T18:34:30.035Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
