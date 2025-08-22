@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>لوحة الرسائل</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.4/dist/style.css" rel="stylesheet" />
+
+<style>
+:root{
+  --bg:#0b0d12;--panel:#0f131b;--stroke:#1c2434;--text:#eaf2ff;--muted:#95a3b8;
+  --brand:#1ed760;--brand2:#6ee7b7;--danger:#ff5d5d;--ok:#70e0b1;
+}
+:root.light{--bg:#f5f7ff;--panel:#ffffff;--stroke:#d7deeb;--text:#0e1116;--muted:#5b667c}
+html,body{background:var(--bg);color:var(--text);font-family:'Tajawal',sans-serif}
+.glass{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid var(--stroke);border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,.25);backdrop-filter:blur(10px)}
+.brand{background:linear-gradient(135deg,var(--brand),var(--brand2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn-brand{background:linear-gradient(135deg,var(--brand),var(--brand2));border:0;color:#08120a;font-weight:800}
+.btn-brand:hover{filter:brightness(.95)}
+.small-muted{color:var(--muted);font-size:.9rem}
+.table-wrap{overflow:hidden;border-radius:14px;border:1px solid var(--stroke)}
+.badge-soft{background:rgba(110,231,183,.15);color:#70e0b1;border:1px solid rgba(110,231,183,.25)}
+.action{display:flex;flex-direction:column;align-items:center;gap:4px}
+.action .lbl{font-size:.75rem;opacity:.85}
+.toolrow{display:flex;flex-wrap:wrap;gap:10px}
+.controls .form-select,.controls .form-control{background:var(--panel);color:var(--text);border:1px solid var(--stroke)}
+.dt-search{display:none}
+.toastbox{position:fixed;bottom:18px;left:18px;z-index:9999;padding:10px 14px;border-radius:12px;background:#0f131b;color:#eaf2ff;border:1px solid var(--stroke);box-shadow:0 12px 30px rgba(0,0,0,.35)}
+.toastbox.ok{border-color:var(--ok)} .toastbox.err{border-color:var(--danger)}
+.switcher{display:flex;align-items:center;gap:8px}
+footer{color:var(--muted)}
+/* responsive */
+@media (max-width:768px){
+  .grid-2{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header class="container py-3">
+  <div class="d-flex align-items-center glass px-3 py-2">
+    <i class="bi bi-inboxes-fill fs-4 me-2"></i>
+    <h1 class="fs-4 m-0">لوحة <span class="brand">الرسائل</span></h1>
+    <div class="ms-auto d-flex align-items-center gap-2">
+      <div class="switcher">
+        <span class="small-muted">تحديث تلقائي</span>
+        <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="autoRefresh" checked></div>
+      </div>
+      <button id="themeBtn" class="btn btn-outline-light btn-sm" title="تبديل الثيم"><i class="bi bi-moon-stars"></i></button>
+      <button id="refreshBtn" class="btn btn-brand btn-sm"><i class="bi bi-arrow-repeat"></i> تحديث</button>
+    </div>
+  </div>
+</header>
+
+<section class="container mt-3">
+  <div class="glass p-3 controls">
+    <div class="row g-2 align-items-end">
+      <div class="col-12 col-md-4">
+        <label class="form-label">بحث</label>
+        <input id="searchInput" type="search" class="form-control" placeholder="الاسم، الإيميل، المدينة...">
+      </div>
+      <div class="col-6 col-md-3">
+        <label class="form-label">الموقع</label>
+        <select id="locFilter" class="form-select">
+          <option value="">الكل</option>
+        </select>
+      </div>
+      <div class="col-6 col-md-3">
+        <label class="form-label">المدة</label>
+        <select id="timeFilter" class="form-select">
+          <option value="all">الكل</option>
+          <option value="24h">آخر 24 ساعة</option>
+          <option value="7d">آخر 7 أيام</option>
+          <option value="30d">آخر 30 يوم</option>
+        </select>
+      </div>
+      <div class="col-12 col-md-2 d-grid">
+        <div class="btn-group">
+          <button id="exportBtn" class="btn btn-outline-success"><i class="bi bi-download"></i> تصدير CSV</button>
+          <button id="perPageBtn" class="btn btn-outline-secondary" title="عدد الصفوف"><i class="bi bi-list-ol"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<main class="container my-3">
+  <div class="table-wrap">
+    <table id="messagesTable" class="table table-hover align-middle m-0">
+      <thead>
+        <tr>
+          <th style="width:60px">#</th>
+          <th>الاسم الكامل</th>
+          <th>الإيميل</th>
+          <th>الرسالة</th>
+          <th>الموقع</th>
+          <th style="min-width:140px">الوقت</th>
+          <th style="width:160px">إجراءات</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</main>
+
+<!-- Drawer -->
+<div class="offcanvas offcanvas-end text-start" tabindex="-1" id="viewDrawer" aria-labelledby="viewLabel">
+  <div class="offcanvas-header">
+    <h5 id="viewLabel" class="m-0">تفاصيل الرسالة</h5>
+    <button class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="mb-2"><span class="small-muted">الاسم:</span> <strong id="dName"></strong></div>
+    <div class="mb-2"><span class="small-muted">الإيميل:</span> <a id="dEmail" href="#" target="_blank"></a></div>
+    <div class="mb-2"><span class="small-muted">الموقع:</span> <span id="dLocation"></span></div>
+    <div class="mb-2"><span class="small-muted">الوقت:</span> <span id="dTime"></span></div>
+    <div class="mb-3">
+      <div class="small-muted mb-1">الرسالة:</div>
+      <div id="dMessage" class="glass p-3 rounded-3"></div>
+    </div>
+    <div class="d-flex gap-2">
+      <a id="replyBtn" class="btn btn-brand"><i class="bi bi-reply-fill"></i> رد</a>
+      <button class="btn btn-outline-danger" id="deleteBtn"><i class="bi bi-trash"></i> حذف</button>
+    </div>
+  </div>
+</div>
+
+<footer class="container text-center py-4 small-muted">© 2025 — لوحة رسائل محسّنة.</footer>
+
+<div id="toast" class="toastbox" hidden>تم</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.4/dist/umd/simple-datatables.min.js"></script>
+
+<script>
+/* ===== Config ===== */
+const API = 'https://localhost:7147/api/Messages'; // غيّرها لو مختلف
+const state = { data: [], table: null, autoTimer: null, theme: localStorage.getItem('dash-theme') || 'dark', perPage: +(localStorage.getItem('perPage')||8) };
+
+/* ===== Helpers ===== */
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+
+/* === وقت: parsing + formatting ثابت === */
+const TIMEZONE = 'Africa/Cairo';
+function parseSentAt(iso){
+  if (iso == null) return NaN;
+
+  // ‎/Date(1723132800000)/ من بعض APIات .NET
+  const m = /^\/Date\((\d+)\)\/$/.exec(iso);
+  if (m) return +m[1];
+
+  if (typeof iso === 'string') {
+    // ISO مع Z -> UTC
+    if (iso.endsWith('Z')) return Date.parse(iso);
+    // ISO بدون timezone: نعتبره UTC (سيرفرك بيسجّل UTC)
+    if (/^\d{4}-\d{2}-\d{2}T/.test(iso)) return Date.parse(iso + 'Z');
+  }
+  // fallback
+  return Date.parse(iso);
+}
+function t(iso){
+  const ms = parseSentAt(iso);
+  if (isNaN(ms)) return '—';
+  return new Intl.DateTimeFormat('ar-EG', {
+    dateStyle:'short', timeStyle:'short', hour12:false, timeZone: TIMEZONE
+  }).format(new Date(ms));
+}
+
+const trunc = (s,n=56)=> s.length>n? s.slice(0,n)+'…': s;
+function toast(msg,ok=true){ const x=$('#toast'); x.textContent=msg; x.className='toastbox '+(ok?'ok':'err'); x.hidden=false; clearTimeout(toast._t); toast._t=setTimeout(()=>x.hidden=true,2000); }
+function setTheme(mode){ if(mode==='light'){ document.documentElement.classList.add('light'); $('#themeBtn').innerHTML='<i class="bi bi-brightness-high"></i>'; } else { document.documentElement.classList.remove('light'); $('#themeBtn').innerHTML='<i class="bi bi-moon-stars"></i>'; } state.theme=mode; localStorage.setItem('dash-theme',mode); }
+
+/* ===== Data ===== */
+async function loadMessages(){
+  try{
+    const res = await fetch(API);
+    state.data = await res.json();
+    applyFiltersAndRender();
+    buildLocationOptions(state.data);
+    toast('تم التحديث', true);
+  }catch(e){
+    console.error(e); toast('فشل التحديث', false);
+  }
+}
+
+function buildLocationOptions(rows){
+  const sel = $('#locFilter');
+  const items = Array.from(new Set(rows.map(r=> r.locationText).filter(Boolean))).sort();
+  sel.innerHTML = '<option value="">الكل</option>' + items.map(x=> `<option>${x}</option>`).join('');
+}
+
+function applyFiltersAndRender(){
+  const q = $('#searchInput').value.trim().toLowerCase();
+  const loc = $('#locFilter').value;
+  const tf = $('#timeFilter').value;
+  const now = Date.now();
+  const within = iso => {
+    if(tf==='all') return true;
+    const ms = { '24h':24*3600e3, '7d':7*24*3600e3, '30d':30*24*3600e3 }[tf];
+    return now - parseSentAt(iso) <= ms;   // ← كان new Date(iso).getTime()
+  };
+
+  let rows = state.data.filter(r=>{
+    const hay = (r.fullName+' '+r.email+' '+(r.locationText||'')+' '+r.messageBody).toLowerCase();
+    const okQ = q? hay.includes(q): true;
+    const okL = loc? r.locationText===loc: true;
+    const okT = within(r.createdAt);
+    return okQ && okL && okT;
+  });
+
+  renderTable(rows);
+}
+
+/* ===== Table ===== */
+function renderTable(rows){
+  const tbody = $('#messagesTable tbody');
+  tbody.innerHTML = rows.map((r,i)=>`
+    <tr data-id="${r.id}">
+      <td class="text-muted">${i+1}</td>
+      <td><strong>${r.fullName}</strong></td>
+      <td><a href="mailto:${r.email}" class="text-decoration-none"><i class="bi bi-envelope-open me-1"></i>${r.email}</a></td>
+      <td class="text-truncate" style="max-width:360px" title="${r.messageBody}">${trunc(r.messageBody)}</td>
+      <td>${r.locationText? `<span class="badge badge-soft">${r.locationText}</span>`: '<span class="text-muted">—</span>'}</td>
+      <td>${t(r.createdAt)}</td>
+      <td class="text-nowrap">
+        <div class="d-flex justify-content-center gap-3">
+          <div class="action">
+            <button class="btn btn-sm btn-outline-primary view-btn"><i class="bi bi-eye"></i></button>
+            <div class="lbl">عرض</div>
+          </div>
+          <div class="action">
+            <button class="btn btn-sm btn-outline-success edit-btn"><i class="bi bi-pencil-square"></i></button>
+            <div class="lbl">تعديل</div>
+          </div>
+          <div class="action">
+            <button class="btn btn-sm btn-outline-danger del-btn"><i class="bi bi-trash"></i></button>
+            <div class="lbl">حذف</div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+
+  if(!state.table){
+    state.table = new simpleDatatables.DataTable('#messagesTable', {
+      perPage: state.perPage,
+      perPageSelect: [8, 15, 25, 50],
+      labels: { placeholder:"بحث…", perPage:"{select} صف/صفوف", noRows:"لا توجد بيانات", info:"إظهار {start}–{end} من {rows}" }
+    });
+  } else {
+    state.table.refresh();
+  }
+
+  // actions
+  $$('#messagesTable .view-btn').forEach(b=> b.onclick = onView);
+  $$('#messagesTable .edit-btn').forEach(b=> b.onclick = onEdit);
+  $$('#messagesTable .del-btn').forEach(b=> b.onclick = onDelete);
+}
+
+/* ===== Actions ===== */
+function rowFromBtn(btn){
+  const tr = btn.closest('tr');
+  const id = +tr.dataset.id;
+  return state.data.find(x=> x.id===id);
+}
+
+function onView(e){
+  const r = rowFromBtn(e.currentTarget);
+  $('#dName').textContent = r.fullName;
+  $('#dEmail').textContent = r.email; $('#dEmail').href = 'mailto:'+r.email;
+  $('#dLocation').textContent = r.locationText || 'غير محدد';
+  $('#dTime').textContent = t(r.createdAt);
+  $('#dMessage').textContent = r.messageBody;
+  $('#replyBtn').href = 'mailto:'+r.email+'?subject=رد%20على%20رسالتك';
+  $('#deleteBtn').onclick = ()=> onDeleteById(r.id,true);
+  bootstrap.Offcanvas.getOrCreateInstance('#viewDrawer').show();
+}
+
+async function onDelete(e){ const r = rowFromBtn(e.currentTarget); onDeleteById(r.id,false); }
+async function onDeleteById(id, closeDrawer){
+  if(!confirm('هل تريد حذف هذه الرسالة؟')) return;
+  try{
+    const res = await fetch(`${API}/${id}`, { method:'DELETE' });
+    if(!res.ok) throw 0;
+    state.data = state.data.filter(x=> x.id!==id);
+    applyFiltersAndRender();
+    if(closeDrawer) bootstrap.Offcanvas.getOrCreateInstance('#viewDrawer').hide();
+    toast('تم الحذف', true);
+  }catch{ toast('فشل الحذف', false); }
+}
+
+async function onEdit(e){
+  const r = rowFromBtn(e.currentTarget);
+  const name = prompt('تعديل الاسم:', r.fullName); if(name===null) return;
+  const email = prompt('تعديل الإيميل:', r.email); if(email===null) return;
+  const msg = prompt('تعديل الرسالة:', r.messageBody); if(msg===null) return;
+  const loc = prompt('تعديل الموقع (مثال: الرياض، السعودية):', r.locationText||''); if(loc===null) return;
+
+  try{
+    const res = await fetch(`${API}/${r.id}`, {
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ fullName:name, email, messageBody:msg, locationText:loc||null })
+    });
+    if(!res.ok) throw 0;
+    Object.assign(r, { fullName:name, email, messageBody:msg, locationText:loc||null });
+    applyFiltersAndRender();
+    toast('تم التعديل', true);
+  }catch{ toast('فشل التعديل', false); }
+}
+
+/* ===== Export ===== */
+function exportCSV(){
+  const head = ['Id','FullName','Email','Message','Location','CreatedAt'];
+  const rows = state.data.map(r => [r.id, r.fullName, r.email, r.messageBody, r.locationText??'', r.createdAt]);
+  const csv = [head.join(',')].concat(rows.map(a=> a.map(v=> `"${String(v??'').replace(/"/g,'""')}"`).join(','))).join('\n');
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'messages.csv'; a.click(); URL.revokeObjectURL(a.href);
+}
+
+/* ===== Events / Init ===== */
+$('#themeBtn').onclick = ()=> setTheme(state.theme==='dark'?'light':'dark');
+$('#refreshBtn').onclick = loadMessages;
+$('#exportBtn').onclick = exportCSV;
+$('#perPageBtn').onclick = ()=>{
+  const v = prompt('عدد الصفوف لكل صفحة (8/15/25/50):', state.perPage);
+  const n = parseInt(v,10);
+  if([8,15,25,50].includes(n)){ state.perPage = n; localStorage.setItem('perPage', n); if(state.table){ state.table.destroy(); state.table=null; } applyFiltersAndRender(); }
+};
+$('#searchInput').addEventListener('input', applyFiltersAndRender);
+$('#locFilter').onchange = applyFiltersAndRender;
+$('#timeFilter').onchange = applyFiltersAndRender;
+$('#autoRefresh').onchange = (e)=> e.target.checked? startAuto(): stopAuto();
+
+function startAuto(){ stopAuto(); state.autoTimer = setInterval(loadMessages, 15000); }
+function stopAuto(){ if(state.autoTimer){ clearInterval(state.autoTimer); state.autoTimer=null; } }
+
+setTheme(state.theme);
+loadMessages();
+startAuto();
+</script>
+</body>
+</html>

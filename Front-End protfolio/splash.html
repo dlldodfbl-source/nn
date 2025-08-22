@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAHMOUD AHMED | C# Developer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+       * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #0d1117, #161b22);
+  color: #e6edf3;
+  min-height: 100vh;
+  overflow: hidden;
+  perspective: 1000px;
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  z-index: 2;
+}
+
+/* Animated Background */
+.bg-animation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(48, 120, 200, 0.05);
+  transform: translate(-50%, -50%);
+  animation: float 15s infinite linear;
+}
+
+/* Header with name and specialization */
+.header {
+  text-align: center;
+  margin-bottom: 4rem;
+  z-index: 10;
+  opacity: 0;
+  animation: fadeInUp 1s 0.5s forwards;
+}
+
+.name {
+  font-size: 5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #f0f6fc;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.name::after {
+  content: "";
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(to right, transparent, #2f81f7, transparent);
+  border-radius: 2px;
+}
+
+.specialization {
+  font-size: 1.8rem;
+  font-weight: 300;
+  letter-spacing: 4px;
+  color: #8b949e;
+  text-transform: uppercase;
+  margin-top: 2.9rem;
+}
+
+/* 3D Cube Container */
+.cube-container {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  margin: 3rem auto;
+  transform-style: preserve-3d;
+  animation: rotateCube 30s infinite linear;
+  z-index: 10;
+  opacity: 0;
+  animation: fadeIn 1s 1s forwards, rotateCube 30s infinite linear 1.5s;
+}
+
+.cube {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.cube-face {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  background: rgba(22, 27, 34, 0.7);
+  border: 1px solid rgba(48, 120, 200, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3.5rem;
+  color: #2f81f7;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.cube-face i {
+  animation: pulse 3s infinite alternate;
+}
+
+.cube-face:nth-child(1) { transform: rotateY(0deg) translateZ(90px); }
+.cube-face:nth-child(2) { transform: rotateY(180deg) translateZ(90px); }
+.cube-face:nth-child(3) { transform: rotateY(90deg) translateZ(90px); }
+.cube-face:nth-child(4) { transform: rotateY(-90deg) translateZ(90px); }
+.cube-face:nth-child(5) { transform: rotateX(90deg) translateZ(90px); }
+.cube-face:nth-child(6) { transform: rotateX(-90deg) translateZ(90px); }
+
+/* Loading Section */
+.loading {
+  width: 80%;
+  max-width: 500px;
+  margin-top: 3rem;
+  z-index: 10;
+  opacity: 0;
+  animation: fadeIn 1s 1.5s forwards;
+}
+
+.loading-text {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-bottom: 1.2rem;
+  color: #8b949e;
+  letter-spacing: 1px;
+  font-weight: 300;
+}
+
+.progress-container {
+  width: 100%;
+  height: 6px;
+  background: rgba(48, 120, 200, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #1f6feb, #2f81f7);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.counter {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+  font-weight: 300;
+  color: #e6edf3;
+}
+
+/* Code particles */
+.particles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  color: rgba(110, 150, 200, 0.1);
+  font-size: 1rem;
+  font-family: 'Courier New', monospace;
+  user-select: none;
+}
+
+/* Footer */
+.footer {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 1rem;
+  color: rgba(139, 148, 158, 0.7);
+  letter-spacing: 2px;
+  z-index: 10;
+  opacity: 0;
+  animation: fadeIn 1s 2s forwards;
+  font-weight: 300;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%   { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+  50%  { opacity: 0.1; }
+  100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+}
+
+@keyframes rotateCube {
+  0%   { transform: rotateX(0) rotateY(0) rotateZ(0); }
+  100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
+}
+
+@keyframes pulse {
+  0%   { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(1.1); opacity: 1; }
+}
+
+@keyframes floatParticle {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.3; }
+  100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .name { font-size: 3.5rem; }
+  .specialization { font-size: 1.4rem; letter-spacing: 3px; }
+  .cube-container { width: 140px; height: 140px; }
+  .cube-face { width: 140px; height: 140px; font-size: 2.5rem; }
+  .cube-face:nth-child(1) { transform: rotateY(0deg) translateZ(70px); }
+  .cube-face:nth-child(2) { transform: rotateY(180deg) translateZ(70px); }
+  .cube-face:nth-child(3) { transform: rotateY(90deg) translateZ(70px); }
+  .cube-face:nth-child(4) { transform: rotateY(-90deg) translateZ(70px); }
+  .cube-face:nth-child(5) { transform: rotateX(90deg) translateZ(70px); }
+  .cube-face:nth-child(6) { transform: rotateX(-90deg) translateZ(70px); }
+}
+
+@media (max-width: 480px) {
+  .name { font-size: 2.8rem; }
+  .specialization { font-size: 1.1rem; letter-spacing: 2px; }
+  .cube-container { width: 120px; height: 120px; }
+  .cube-face { width: 120px; height: 120px; font-size: 2rem; }
+  .cube-face:nth-child(1) { transform: rotateY(0deg) translateZ(60px); }
+  .cube-face:nth-child(2) { transform: rotateY(180deg) translateZ(60px); }
+  .cube-face:nth-child(3) { transform: rotateY(90deg) translateZ(60px); }
+  .cube-face:nth-child(4) { transform: rotateY(-90deg) translateZ(60px); }
+  .cube-face:nth-child(5) { transform: rotateX(90deg) translateZ(60px); }
+  .cube-face:nth-child(6) { transform: rotateX(-90deg) translateZ(60px); }
+}
+
+/* عنوان متحرك (أصلي) */
+.name {
+  font-size: 4rem;
+  font-weight: bold;
+  text-align: center;
+  background: linear-gradient(45deg, #ff0057, #00c3ff, #aaff00, #ff8c00);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: colorCycle 6s ease-in-out infinite, floatUpDown 3s ease-in-out infinite;
+  letter-spacing: 3px;
+}
+
+@keyframes colorCycle {
+  0% { background-position: 0% 50%; }
+  25% { background-position: 50% 50%; }
+  50% { background-position: 100% 50%; }
+  75% { background-position: 50% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes floatUpDown {
+  0%,100% { transform: translateY(0px); }
+  50%     { transform: translateY(-10px); }
+}
+
+/* =====[ تحسينات الاستجابة — ضيفه في الآخر ]===== */
+
+/* ارتفاع شاشة حقيقي على الموبايل + حواف مرنة */
+html, body { height: 100%; }
+.container {
+  min-height: 100svh;
+  height: 100dvh;
+  padding-inline: clamp(12px, 2vw, 24px);
+}
+
+/* في الشاشات الصغيرة جدًا خلّي التمرير شغال */
+@media (max-width: 480px){
+  body { overflow: auto; }
+}
+
+/* تثبيت مقاسات الخلفيات مع الشاشة */
+.bg-animation, .particles {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* تدرّج الخطوط حسب العرض */
+.header { padding-inline: clamp(8px, 3vw, 24px); }
+.name { font-size: clamp(2rem, 6vw, 5rem); line-height: 1.1; word-break: break-word; }
+.specialization {
+  font-size: clamp(0.95rem, 2.5vw, 1.8rem);
+  letter-spacing: clamp(1px, 0.5vw, 4px);
+  margin-top: clamp(12px, 2.5vw, 2.5rem);
+}
+
+/* مكعّب يتكيّف تلقائيًا */
+.cube-container {
+  width: clamp(110px, 18vw, 180px);
+  height: clamp(110px, 18vw, 180px);
+  margin: clamp(1.5rem, 4vw, 3rem) auto;
+}
+.cube-face {
+  width: 100%;
+  height: 100%;
+  font-size: clamp(1.6rem, 4vw, 3.5rem);
+}
+/* العمق محسوب كنصف الحاوية الحالية */
+.cube-face:nth-child(1){ transform: rotateY(0deg)    translateZ(calc(0.5 * clamp(110px, 18vw, 180px))); }
+.cube-face:nth-child(2){ transform: rotateY(180deg)  translateZ(calc(0.5 * clamp(110px, 18vw, 180px))); }
+.cube-face:nth-child(3){ transform: rotateY(90deg)   translateZ(calc(0.5 * clamp(110px, 18vw, 180px))); }
+.cube-face:nth-child(4){ transform: rotateY(-90deg)  translateZ(calc(0.5 * clamp(110px, 18vw, 180px))); }
+.cube-face:nth-child(5){ transform: rotateX(90deg)   translateZ(calc(0.5 * clamp(110px, 18vw, 180px))); }
+.cube-face:nth-child(6){ transform: rotateX(-90deg)  translateZ(calc(0.5 * clamp(110px, 18vw, 180px))); }
+
+/* اللودينج */
+.loading { width: min(90%, 520px); margin-top: clamp(1rem, 3vw, 3rem); }
+.loading-text { font-size: clamp(0.95rem, 2.5vw, 1.2rem); }
+.progress-container { height: clamp(6px, 0.8vw, 8px); }
+.counter { font-size: clamp(1rem, 3.5vw, 1.5rem); }
+
+/* الفوتر */
+.footer {
+  bottom: clamp(12px, 3.5vw, 2.5rem);
+  font-size: clamp(0.85rem, 2.4vw, 1rem);
+  padding-inline: clamp(8px, 3vw, 24px);
+}
+
+/* دوائر الخلفية */
+.bg-circle { width: clamp(180px, 40vw, 520px); height: clamp(180px, 40vw, 520px); }
+
+/* تقليل الحركة */
+@media (prefers-reduced-motion: reduce){
+  .cube-container, .cube-face i, .bg-circle, .particle { animation: none !important; }
+}
+</style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation" id="bgAnimation"></div>
+    
+    <!-- Floating Code Particles -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <div class="header">
+            <h1 class="name"><--Programmer MAHMOUD--> </h1>
+            <div class="specialization">C# DEVELOPER</div>
+        </div>
+        
+        <!-- 3D Cube -->
+        <div class="cube-container">
+            <div class="cube">
+                <div class="cube-face">C#</div>
+                <div class="cube-face"><i class="fas fa-code"></i></div>
+                <div class="cube-face"><i class="fas fa-cogs"></i></div>
+                <div class="cube-face"><i class="fas fa-server"></i></div>
+                <div class="cube-face"><i class="fas fa-microchip"></i></div>
+                <div class="cube-face"><i class="fas fa-database"></i></div>
+            </div>
+        </div>
+        
+        <!-- Loading Section -->
+        <div class="loading">
+            <div class="loading-text">Welcome IN Protofile Mahmoud 💥</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="counter" id="counter">0%</div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            Loading portfolio interface
+        </div>
+    </div>
+
+    <script>
+        // Create animated background circles
+        const bgAnimation = document.getElementById('bgAnimation');
+        const circlesCount = 10;
+        
+        for (let i = 0; i < circlesCount; i++) {
+            const circle = document.createElement('div');
+            circle.classList.add('bg-circle');
+            
+            // Random position
+            const posX = Math.random() * 100;
+            const posY = Math.random() * 100;
+            circle.style.left =` ${posX}%`;
+            circle.style.top = `${posY}%`;
+            
+            // Random size
+            const size = Math.random() * 100 + 50;
+            circle.style.width = `${size}px`;
+            circle.style.height =` ${size}px`;
+            
+            // Random animation duration and delay
+            const duration = 15 + Math.random() * 20;
+            const delay = Math.random() * 5;
+            circle.style.animationDuration = `${duration}s`;
+            circle.style.animationDelay = `${delay}s`;
+            
+            bgAnimation.appendChild(circle);
+        }
+        
+        // Create floating code particles
+        const particlesContainer = document.getElementById('particles');
+        const particlesCount = 80;
+        const symbols = ["{", "}", "(", ")", "[", "]", "<", ">", ";", "=", "+", "-", "*", "/"];
+        
+        for (let i = 0; i < particlesCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+            
+            // Random position
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            
+            // Random animation
+            const duration = 15 + Math.random() * 20;
+            const delay = Math.random() * 10;
+            particle.style.animation = `floatParticle ${duration}s ${delay}s infinite`;
+            
+            // Random size and opacity
+            const size = Math.random() * 20 + 10;
+            const opacity = Math.random() * 0.2 + 0.05;
+            particle.style.fontSize = `${size}px`;
+            particle.style.opacity = opacity;
+            
+            particlesContainer.appendChild(particle);
+        }
+        
+        // Progress bar animation
+        const progressBar = document.getElementById('progressBar');
+        const counter = document.getElementById('counter');
+        let progress = 0;
+        
+        function updateProgress() {
+            if (progress < 100) {
+                progress += 0.5;
+                progressBar.style.width =` ${progress}%`;
+                counter.innerText =`${Math.floor(progress)}%`;
+                
+                // Add some randomness to progress for realism
+                setTimeout(updateProgress, 30 + Math.random() * 40);
+            } else {
+                // Redirect after loading completes
+                setTimeout(() => {
+                    window.location.href = 'protofile.html';
+                }, 1000);
+            }
+        }
+        
+        // Start progress animation after initial delay
+        setTimeout(updateProgress, 2000);
+    </script>
+</body>
+</html>

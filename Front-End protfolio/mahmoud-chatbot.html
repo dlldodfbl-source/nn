@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المساعد الذكي - محمود</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   
+   <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        body {
+            background: #f5f5f5;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            color: #333;
+        }
+        
+        body.dark-theme {
+            background: #121212;
+            color: #f0f0f0;
+        }
+        
+        /* Language Backgrounds */
+        body.arabic-bg {
+            background: linear-gradient(135deg, #1a0633, #0d1b2a);
+        }
+        
+        body.english-bg {
+            background: linear-gradient(135deg, #0d1b2a, #1a0633);
+        }
+        
+        /* Splash Screen */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a0633, #0d1b2a);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.8s ease-out, visibility 0.8s;
+        }
+        
+        .robot-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin-bottom: 2rem;
+            transform: scaleX(-1); /* Flip horizontally */
+        }
+        
+        .robot-head {
+            width: 150px;
+            height: 120px;
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            border-radius: 40% 40% 0 0;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .robot-eye {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #00d2ff;
+            border-radius: 50%;
+            top: 40px;
+            box-shadow: 0 0 15px #00d2ff, 0 0 30px rgba(0, 210, 255, 0.3);
+            animation: blink 4s infinite;
+        }
+        
+        .robot-eye.left {
+            left: 35px;
+        }
+        
+        .robot-eye.right {
+            right: 35px;
+        }
+        
+        .robot-mouth {
+            position: absolute;
+            width: 60px;
+            height: 20px;
+            background: #ff1744;
+            border-radius: 10px;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: talk 2s infinite;
+        }
+        
+        .robot-body {
+            width: 180px;
+            height: 120px;
+            background: linear-gradient(145deg, #16213e, #1a1a2e);
+            border-radius: 20px;
+            position: relative;
+            top: -20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            padding-top: 20px;
+        }
+        
+        .robot-panel {
+            width: 80%;
+            height: 60px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        .led {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #00d2ff;
+            box-shadow: 0 0 15px #00d2ff, 0 0 30px rgba(0, 210, 255, 0.3);
+            animation: pulse 1.5s infinite;
+        }
+        
+        .led:nth-child(1) { animation-delay: 0s; }
+        .led:nth-child(2) { animation-delay: 0.3s; }
+        .led:nth-child(3) { animation-delay: 0.6s; }
+        .led:nth-child(4) { animation-delay: 0.9s; }
+        .led:nth-child(5) { animation-delay: 1.2s; }
+        
+        .loading-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-top: 1.5rem;
+            text-align: center;
+            position: relative;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Main Chat Container */
+        .chat-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border-radius: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        
+        .dark-theme .chat-container {
+            background: #1e1e1e;
+        }
+        
+        .chat-container.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Chat Header */
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: #f0f0f0;
+            border-bottom: 1px solid #e0e0e0;
+            height: 72px;
+        }
+        
+        .dark-theme .chat-header {
+            background: #2d2d2d;
+            border-bottom: 1px solid #333;
+        }
+        
+        .chat-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .title-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #2196F3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 0 10px rgba(33, 150, 243, 0.5);
+        }
+        
+        .title-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #000;
+        }
+        
+        .dark-theme .title-text {
+            color: #fff;
+        }
+        
+        .chat-actions {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .action-btn {
+            background: transparent;
+            border: none;
+            color: #000;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .action-btn .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff1744;
+            color: white;
+            font-size: 10px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 5px rgba(255, 23, 68, 0.8);
+        }
+        
+        .dark-theme .action-btn {
+            color: #fff;
+        }
+        
+        .action-btn:hover {
+            background: rgba(0, 0, 0, 0.05);
+            transform: rotate(15deg);
+        }
+        
+        .dark-theme .action-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Chat Messages Area */
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: #fafafa;
+            min-height: 0;
+        }
+        
+        .dark-theme .chat-messages {
+            background: #1a1a1a;
+        }
+        
+        .message {
+            max-width: 85%;
+            padding: 16px 20px;
+            border-radius: 18px;
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+            word-wrap: break-word;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e0e0e0;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        
+        .dark-theme .message {
+            border: 1px solid #333;
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            background: #e3f2fd;
+            border-bottom-right-radius: 4px;
+            color: #1565C0;
+            border: 1px solid #bbdefb;
+        }
+        
+        .dark-theme .user-message {
+            background: #2d2d2d;
+            border: 1px solid #444;
+            color: #90caf9;
+        }
+        
+        .bot-message {
+            align-self: flex-start;
+            background: #f5f5f5;
+            border-bottom-left-radius: 4px;
+            color: #333;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .dark-theme .bot-message {
+            background: #2d2d2d;
+            border: 1px solid #444;
+            color: #e0e0e0;
+        }
+        
+        .system-message {
+            align-self: center;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+            max-width: 70%;
+            text-align: center;
+        }
+        
+        .dark-theme .system-message {
+            background: #1b5e20;
+            color: #a5d6a7;
+            border: 1px solid #2e7d32;
+        }
+        
+        .message-time {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 8px;
+            text-align: left;
+            color: #666;
+        }
+        
+        .dark-theme .message-time {
+            color: #aaa;
+        }
+        
+        .typing-indicator {
+            align-self: flex-start;
+            background: #fff;
+            padding: 16px 20px;
+            border-radius: 18px;
+            display: inline-flex;
+            gap: 6px;
+            width: auto;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .dark-theme .typing-indicator {
+            background: #2d2d2d;
+            border: 1px solid #333;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #666;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .dark-theme .typing-dot {
+            background: #aaa;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        /* Question Buttons */
+        .questions-container {
+            padding: 15px;
+            background: #f0f0f0;
+            border-top: 1px solid #e0e0e0;
+            height: auto;
+            min-height: 180px;
+        }
+        
+        .dark-theme .questions-container {
+            background: #2d2d2d;
+            border-top: 1px solid #333;
+        }
+        
+        .questions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            max-height: 100%;
+        }
+        
+        .question-btn {
+            padding: 12px;
+            border-radius: 8px;
+            background: #fff;
+            border: 1px solid #d0d0d0;
+            color: #000;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.4;
+        }
+        
+        .dark-theme .question-btn {
+            background: #2d2d2d;
+            border: 1px solid #444;
+            color: #fff;
+        }
+        
+        .question-btn:hover {
+            background: #e8e8e8;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark-theme .question-btn:hover {
+            background: #3a3a3a;
+        }
+        
+        /* Settings Panel */
+        .settings-panel {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 300px;
+            height: 100%;
+            background: #fff;
+            z-index: 100;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            transition: right 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            overflow-y: auto;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+        }
+        
+        .dark-theme .settings-panel {
+            background: #1e1e1e;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+        }
+        
+        .settings-panel.active {
+            right: 0;
+        }
+        
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .settings-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #000;
+        }
+        
+        .dark-theme .settings-title {
+            color: #fff;
+        }
+        
+        .close-settings {
+            background: transparent;
+            border: none;
+            color: #000;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .dark-theme .close-settings {
+            color: #fff;
+        }
+        
+        .close-settings:hover {
+            color: #666;
+            transform: rotate(90deg);
+        }
+        
+        .dark-theme .close-settings:hover {
+            color: #aaa;
+        }
+        
+        .settings-group {
+            background: #f8f8f8;
+            border-radius: 10px;
+            padding: 16px;
+        }
+        
+        .dark-theme .settings-group {
+            background: #2a2a2a;
+        }
+        
+        .group-title {
+            font-size: 1rem;
+            margin-bottom: 16px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .dark-theme .group-title {
+            color: #ccc;
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .dark-theme .setting-item {
+            border-bottom: 1px solid #333;
+        }
+        
+        .setting-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #000;
+        }
+        
+        .dark-theme .setting-label {
+            color: #fff;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background: #2196F3;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+        
+        /* Action Buttons */
+        .action-button {
+            padding: 10px 16px;
+            border-radius: 8px;
+            background: #fff;
+            border: 1px solid #d0d0d0;
+            color: #000;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            justify-content: center;
+            margin-top: 8px;
+        }
+        
+        .dark-theme .action-button {
+            background: #2d2d2d;
+            border: 1px solid #444;
+            color: #fff;
+        }
+        
+        .action-button:hover {
+            background: #e8e8e8;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark-theme .action-button:hover {
+            background: #3a3a3a;
+        }
+        
+        /* Back Button */
+        .back-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px;
+            background: #f0f0f0;
+            border: 1px solid #d0d0d0;
+            border-radius: 8px;
+            color: #000;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+        
+        .dark-theme .back-button {
+            background: #2d2d2d;
+            border: 1px solid #444;
+            color: #fff;
+        }
+        
+        .back-button:hover {
+            background: #e8e8e8;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark-theme .back-button:hover {
+            background: #3a3a3a;
+        }
+        
+        /* Animations */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes blink {
+            0%, 44%, 48%, 52%, 56%, 100% { height: 20px; }
+            46%, 50%, 54% { height: 5px; }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+        
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-6px); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes langChange {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .questions-grid {
+                grid-template-columns: 1fr;
+                max-height: 250px;
+                overflow-y: auto;
+            }
+            
+            .message {
+                max-width: 90%;
+                padding: 12px 16px;
+                font-size: 0.95rem;
+            }
+            
+            .settings-panel {
+                width: 100%;
+            }
+            
+            .robot-container {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .robot-head {
+                width: 120px;
+                height: 90px;
+            }
+            
+            .robot-eye {
+                width: 20px;
+                height: 20px;
+                top: 30px;
+            }
+            
+            .robot-eye.left {
+                left: 25px;
+            }
+            
+            .robot-eye.right {
+                right: 25px;
+            }
+            
+            .robot-mouth {
+                width: 40px;
+                height: 15px;
+                bottom: 20px;
+            }
+            
+            .robot-body {
+                width: 140px;
+                height: 90px;
+                top: -15px;
+            }
+            
+            .chat-header {
+                padding: 12px 15px;
+                height: 65px;
+            }
+            
+            .title-text {
+                font-size: 1.1rem;
+            }
+            
+            .chat-messages {
+                padding: 15px;
+            }
+            
+            .questions-container {
+                padding: 12px;
+                min-height: 160px;
+            }
+            
+            .question-btn {
+                padding: 10px;
+                font-size: 0.85rem;
+                min-height: 45px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .question-btn {
+                padding: 8px;
+                font-size: 0.82rem;
+            }
+            
+            .message {
+                padding: 10px 14px;
+                font-size: 0.92rem;
+            }
+            
+            .chat-messages {
+                padding: 12px 10px;
+            }
+            
+            .questions-container {
+                padding: 10px;
+                min-height: 150px;
+            }
+            
+            .chat-header {
+                padding: 10px 12px;
+                height: 60px;
+            }
+            
+            .title-text {
+                font-size: 1rem;
+            }
+            
+            .title-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 18px;
+            }
+            
+            .action-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+            }
+            
+            .loading-text {
+                font-size: 1.4rem;
+            }
+        }
+        
+        /* Scrollbar styling */
+        .questions-grid::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .questions-grid::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .questions-grid::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        
+        .dark-theme .questions-grid::-webkit-scrollbar-track {
+            background: #333;
+        }
+        
+        .dark-theme .questions-grid::-webkit-scrollbar-thumb {
+            background: #555;
+        }
+        
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        
+        .dark-theme .chat-messages::-webkit-scrollbar-track {
+            background: #2a2a2a;
+        }
+        
+        .dark-theme .chat-messages::-webkit-scrollbar-thumb {
+            background: #555;
+        }
+        
+        /* Language Switch */
+        .language-switch {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            gap: 10px;
+        }
+        
+        .lang-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            background: #e0e0e0;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            font-weight: 600;
+        }
+        
+        .lang-btn.active {
+            background: #2196F3;
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(33, 150, 243, 0.5);
+        }
+        
+        .lang-btn i {
+            font-size: 24px;
+        }
+        
+        .dark-theme .lang-btn {
+            background: #444;
+            color: #ddd;
+        }
+        
+        .dark-theme .lang-btn.active {
+            background: #2196F3;
+            color: white;
+        }
+        
+        /* Language Change Notification */
+        .lang-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 10px;
+            font-size: 1.5rem;
+            z-index: 2000;
+            animation: langChange 0.5s ease-out;
+            display: none;
+        }
+        
+        .lang-notification i {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body class="arabic-bg">
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <div class="robot-container">
+            <div class="robot-head">
+                <div class="robot-eye left"></div>
+                <div class="robot-eye right"></div>
+                <div class="robot-mouth"></div>
+            </div>
+            <div class="robot-body">
+                <div class="robot-panel">
+                    <div class="led"></div><div class="led"></div><div class="led"></div><div class="led"></div><div class="led"></div>
+                </div>
+            </div>
+        </div>
+        <div class="loading-text">Loading Assistant Mahmoud</div>
+    </div>
+
+    <!-- Language Change Notification -->
+    <div class="lang-notification" id="langNotification">
+        <i class="fas fa-language"></i>
+        <span id="langText">تم تغيير اللغة إلى العربية</span>
+    </div>
+
+    <!-- Main Chat Container -->
+    <div class="chat-container" id="chatContainer">
+        <!-- Chat Header -->
+        <div class="chat-header">
+            <div class="chat-title">
+                <div class="title-icon"><i class="fas fa-robot"></i></div>
+                <div class="title-text">المساعد الذكي - محمود</div>
+            </div>
+            <div class="chat-actions">
+                <button class="action-btn" id="settingsToggle">
+                    <i class="fas fa-cog"></i>
+                    <span class="badge" id="langBadge">AR</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Messages Area -->
+        <div class="chat-messages" id="chatMessages"></div>
+
+        <!-- Question Buttons -->
+        <div class="questions-container">
+            <div class="questions-grid">
+                <button class="question-btn" data-question="1">ما الخدمات التي تقدمها؟</button>
+                <button class="question-btn" data-question="2">هل تقدر تنفذ تصميم مخصص للبراند؟</button>
+                <button class="question-btn" data-question="3">المدة المتوقعة لتنفيذ المشروع؟</button>
+                <button class="question-btn" data-question="4">هل في صيانة ودعم بعد التسليم؟</button>
+                <button class="question-btn" data-question="5">بتستخدم أي تقنيات؟</button>
+                <button class="question-btn" data-question="6">هل الموقع متجاوب مع كل الشاشات؟</button>
+                <button class="question-btn" data-question="7">هل تقدر تربط الموقع بأنظمة خارجية؟</button>
+                <button class="question-btn" data-question="8">عندك مشاريع مشابهة سابقة؟</button>
+                <button class="question-btn" data-question="9">إزاي يتم التواصل أثناء المشروع؟</button>
+                <button class="question-btn" data-question="10">أقدر أشوف أعمالك؟</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div class="settings-panel" id="settingsPanel">
+        <div class="settings-header">
+            <div class="settings-title">الإعدادات</div>
+            <button class="close-settings" id="closeSettings">×</button>
+        </div>
+
+        <div class="settings-group">
+            <div class="group-title"><i class="fas fa-language"></i> تبديل اللغة</div>
+            <div class="language-switch">
+                <button class="lang-btn active" data-lang="ar"><i class="fas fa-font"></i> العربية</button>
+                <button class="lang-btn" data-lang="en"><i class="fas fa-globe"></i> English</button>
+            </div>
+        </div>
+
+        <div class="settings-group">
+            <div class="group-title">الإعدادات العامة</div>
+            <div class="setting-item">
+                <div class="setting-label"><i class="fas fa-moon"></i> الوضع الليلي</div>
+                <label class="switch">
+                    <input type="checkbox" id="darkModeToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label"><i class="fas fa-volume-up"></i>(EN) تشغيل الصوت</div>
+                <label class="switch">
+                    <input type="checkbox" id="soundToggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="settings-group">
+            <div class="group-title">إدارة البيانات</div>
+            <button class="action-button" id="resetChatBtn"><i class="fas fa-trash-alt"></i> مسح المحادثة</button>
+        </div>
+
+
+
+        <div class="settings-group">
+            <div class="group-title">التنقل</div>
+            <a href="protofile.html" class="back-button" id="backToMain"><i class="fas fa-arrow-left">لعودة للصفحة الرئيسية</i>  </a>
+        </div>
+    </div>
+
+    <!-- Hidden audio element for sound effects -->
+    <audio id="messageSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-electronic-retro-notification-951.mp3" type="audio/mpeg">
+    </audio>
+
+<script>
+
+/* ================= DOM ================= */
+const splashScreen     = document.getElementById('splash-screen');
+const chatContainer    = document.getElementById('chatContainer');
+const chatMessages     = document.getElementById('chatMessages');
+const settingsToggle   = document.getElementById('settingsToggle');
+const closeSettings    = document.getElementById('closeSettings');
+const settingsPanel    = document.getElementById('settingsPanel');
+const darkModeToggle   = document.getElementById('darkModeToggle');
+const soundToggle      = document.getElementById('soundToggle');
+const resetChatBtn     = document.getElementById('resetChatBtn');
+const backToMain       = document.getElementById('backToMain');
+const questionButtons  = document.querySelectorAll('.question-btn');
+const langButtons      = document.querySelectorAll('.lang-btn');
+const body             = document.body;
+const messageSound     = document.getElementById('messageSound');
+const langNotification = document.getElementById('langNotification');
+const langText         = document.getElementById('langText');
+const langBadge        = document.getElementById('langBadge');
+
+/* ============= Helpers آمنة ============= */
+const $  = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+function setSafeText(selOrEl, text){ const el = typeof selOrEl==='string'?$(selOrEl):selOrEl; if(el) el.textContent=text; }
+function setSafeHTML(selOrEl, html){ const el = typeof selOrEl==='string'?$(selOrEl):selOrEl; if(el) el.innerHTML=html; }
+
+/* ================ الحالة ================ */
+let isSoundOn = true;
+let isDarkMode = false;
+let chatHistory = [];
+let lastBotMessage = "";
+let currentLang = 'ar'; // العربية افتراضيًا
+
+/* ============== ردود ثابتة ============== */
+const responsesAr = {
+  1:"أطوّر مواقع ويب متكاملة: واجهة أمامية متجاوبة، باك‑إند ASP.NET Core، قواعد بيانات SQL Server، دمج APIs، لوحات تحكم، متابعات وسجلات، وتخصيص حسب هوية البراند.",
+  2:"نعم. بعمل تصميمات مخصّصة متوافقة مع ألوان وشخصية البراند مع تجربة استخدام بسيطة وسريعة.",
+  3:"حسب الحجم والخواص. أغلب مواقع الشركات الصغيرة من أسبوعين إلى 4 أسابيع مع تسليم مراحل واضحة ونسخة معاينة.",
+  4:"متاح. فيه خطط صيانة شهرية أو دعم عند الطلب (تحديثات، نسخ احتياطي، مراقبة الأداء والحماية).",
+  5:"• Back‑End: C#, ASP.NET Core (Web API, MVC), Entity Framework Core, LINQ\n• Database: SQL Server\n• التوثيق و الـ API: Swagger/OpenAPI، Postman\n• Front‑End: HTML, CSS, Bootstrap, JavaScript\n• Dev & أدوات: Git/GitHub، Logging، إعدادات نشر (IIS/Windows Hosting أو Cloud لاحقًا)",
+  6:"أكيد. كل الصفحات متجاوبة بالكامل للموبايل والتابلت والديسكتوب.",
+  7:"نعم. عندي خبرة في الدمج مع مزوّدي دفع وخدمات خرائط وجلب مواقع المستخدم ودمج أي REST APIs مطلوبة.",
+  8:"أيوه. اشتغلت على مواقع شركات خدمية ومتاجر بسيطة ولوحات إدارة داخلية—حلول سريعة وخفيفة تركز على الأداء والتجربة.",
+  9:"• واتساب/موبايل: 20+ 01098035189\n• إيميل: mahmoudcodeing446@gmail.com\n• السوشيال: كل الروابط موجودة في الموقع (قسم الشبكات الاجتماعية).\nبشاركك تحديثات منتظمة وخريطة مهام واضحة.",
+  10:"نعم، يمكنك تصفّح قسم المشاريع في موقعي لرؤية بعض الأعمال الحية وملخصات سريعة لكل مشروع."
+};
+const responsesEn = {
+  1:"I develop full-stack websites: responsive front-end, ASP.NET Core back-end, SQL Server databases, API integrations, control panels, tracking systems, and custom branding.",
+  2:"Yes. I create custom designs that align with brand colors and identity, with a simple and fast user experience.",
+  3:"Depending on size and features. Most small business websites take 2 to 4 weeks with clear milestones and preview versions.",
+  4:"Available. Monthly maintenance plans or on-demand support (updates, backups, performance monitoring, and security).",
+  5:"• Back-End: C#, ASP.NET Core (Web API, MVC), Entity Framework Core, LINQ\n• Database: SQL Server\n• API Documentation: Swagger/OpenAPI, Postman\n• Front-End: HTML, CSS, Bootstrap, JavaScript\n• Dev & Tools: Git/GitHub, Logging, Deployment setup (IIS/Windows Hosting or Cloud later)",
+  6:"Absolutely. All pages are fully responsive for mobile, tablet, and desktop.",
+  7:"Yes. I have experience integrating with payment providers, map services, user location services, and any required REST APIs.",
+  8:"Yes. I've worked on service company websites, simple e-commerce stores, and internal dashboards—fast and lightweight solutions focused on performance and experience.",
+  9:"• WhatsApp/Mobile: +20 1098035189\n• Email: mahmoudcodeing446@gmail.com\n• Social Media: All links are available on the website (Social Media section).\nI share regular updates and a clear task roadmap.",
+  10:"Yes, you can browse the projects section on my website to see some live work and quick summaries for each project."
+};
+
+/* ============== نصوص الواجهة ============== */
+const uiTexts = {
+  ar:{
+    title:"المساعد الذكي - محمود", settingsTitle:"الإعدادات",
+    darkMode:"الوضع الليلي", sound:"تشغيل الصوت",
+    resetChat:"مسح المحادثة", backToMain:"العودة للصفحة الرئيسية",
+    welcome:"مرحبًا! أنا محمود، مساعدك الذكي. يرجى اختيار أي من الأسئلة أدناه للحصول على المعلومات.",
+    resetConfirm:"تم مسح سجل المحادثة بنجاح!",
+    questions:[
+      "ما الخدمات التي تقدمها؟","هل تقدر تنفذ تصميم مخصص للبراند؟","المدة المتوقعة لتنفيذ المشروع؟",
+      "هل في صيانة ودعم بعد التسليم؟","بتستخدم أي تقنيات؟","هل الموقع متجاوب مع كل الشاشات؟",
+      "هل تقدر تربط الموقع بأنظمة خارجية؟","عندك مشاريع مشابهة سابقة؟","إزاي يتم التواصل أثناء المشروع؟","أقدر أشوف أعمالك؟"
+    ],
+    langNotification:"تم تغيير اللغة إلى العربية"
+  },
+  en:{
+    title:"AI Assistant - Mahmoud", settingsTitle:"Settings",
+    darkMode:"Dark Mode", sound:"Sound",
+    resetChat:"Reset Chat", backToMain:"Back to Main Page",
+    welcome:"Hello! I'm Mahmoud, your AI assistant. Please select any of the questions below to get information.",
+    resetConfirm:"Chat history has been cleared successfully!",
+    questions:[
+      "What services do you offer?","Can you create custom brand designs?","What's the estimated project duration?",
+      "Is there maintenance and support after delivery?","What technologies do you use?","Is the website responsive on all screens?",
+      "Can you integrate with external systems?","Do you have similar previous projects?","How do we communicate during the project?","Can I see your previous work?"
+    ],
+    langNotification:"Language changed to English"
+  }
+};
+
+const synth = window.speechSynthesis;
+let voicesCache = [];
+
+function waitForVoices(timeout = 1500){
+  return new Promise(resolve=>{
+    const start = Date.now();
+    const tick = ()=>{
+      voicesCache = synth.getVoices();
+      if (voicesCache.length || Date.now()-start>timeout) return resolve(voicesCache);
+      setTimeout(tick,100);
+    };
+    if (typeof synth.onvoiceschanged !== 'undefined'){
+      synth.onvoiceschanged = ()=>{ voicesCache = synth.getVoices(); resolve(voicesCache); };
+    }
+    tick();
+  });
+}
+
+/* ============== النطق (ذكر دائمًا) ============== */
+async function speak(text){
+  if (!isSoundOn || !synth) return;
+  
+  // إلغاء أي نطق جارٍ
+  if (synth.speaking) synth.cancel();
+  
+  // الانتظار حتى تكون الأصوات جاهزة
+  await waitForVoices();
+  
+  const u = new SpeechSynthesisUtterance(text);
+  
+  // تحديد اللغة تلقائيًا من النص
+  const isArabic = /[\u0600-\u06FF]/.test(text);
+  
+  // إعدادات الصوت
+  u.rate = isArabic ? 0.98 : 1.0;
+  u.pitch = 0.85; // نبرة رجل
+  u.volume = 1.0;
+  
+  // اختيار صوت رجل ثابت لكل اللغات
+  const maleVoice = getGuaranteedMaleVoice(isArabic);
+  if (maleVoice) {
+    u.voice = maleVoice;
+    u.lang = maleVoice.lang;
+    synth.speak(u);
+  }
+}
+
+// دالة تضمن صوت رجل فقط
+function getGuaranteedMaleVoice(isArabic) {
+  const availableVoices = synth.getVoices();
+  
+  // قائمة ثابتة بأصوات الرجال لكل لغة
+  const maleVoices = [
+    // أصوات عربية
+    { name: 'Microsoft Naayf', lang: 'ar-SA' },
+    { name: 'Google العربية', lang: 'ar-XA' },
+    { name: 'Tarik', lang: 'ar-DZ' },
+    
+    // أصوات إنجليزية
+    { name: 'Microsoft David', lang: 'en-US' },
+    { name: 'Google UK English Male', lang: 'en-GB' },
+    { name: 'Alex', lang: 'en-US' }
+  ];
+
+  // البحث عن صوت مناسب
+  const langFilter = isArabic ? 'ar' : 'en';
+  
+  // البحث عن صوت من القائمة الثابتة
+  for (const voiceDef of maleVoices) {
+    const found = availableVoices.find(v => 
+      v.name === voiceDef.name && v.lang.startsWith(langFilter)
+    );
+    if (found) return found;
+  }
+  
+  // إذا لم يجد صوت من القائمة، يبحث عن أي صوت رجل
+  return availableVoices.find(v => 
+    v.lang.startsWith(langFilter) && 
+    (v.name.toLowerCase().includes('male') || 
+     v.name.toLowerCase().includes('david') || 
+     v.name.toLowerCase().includes('naayf') || 
+     v.name.toLowerCase().includes('tarik'))
+  );
+}
+
+/* ============== تهيئة ============== */
+function initApp(){
+  loadPreferences();
+
+  setTimeout(()=>{
+    if (splashScreen){
+      splashScreen.style.opacity = '0';
+      splashScreen.style.transform = 'scale(1.1)';
+    }
+    setTimeout(()=>{
+      if (splashScreen) splashScreen.style.display = 'none';
+      if (chatContainer) chatContainer.classList.add('active');
+      showWelcomeMessage();
+    },800);
+  },3000);
+
+  setupEventListeners();
+}
+/* ============== تفضيلات ============== */
+function loadPreferences(){
+  const savedTheme = localStorage.getItem('nexusTheme');
+  if (savedTheme==='dark'){
+    body.classList.add('dark-theme');
+    isDarkMode = true;
+    if (darkModeToggle) darkModeToggle.checked = true;
+  }
+  const savedSound = localStorage.getItem('nexusSound');
+  if (savedSound==='off'){
+    isSoundOn = false;
+    if (soundToggle) soundToggle.checked = false;
+  }
+  const savedLang = localStorage.getItem('nexusLang');
+  if (savedLang) setLanguage(savedLang, false);
+
+  const savedHistory = localStorage.getItem('nexusChatHistory');
+  if (savedHistory){
+    chatHistory = JSON.parse(savedHistory);
+    renderChatHistory();
+  }
+}
+function savePreferences(){
+  localStorage.setItem('nexusTheme', isDarkMode?'dark':'light');
+  localStorage.setItem('nexusSound', isSoundOn?'on':'off');
+  localStorage.setItem('nexusLang', currentLang);
+}
+
+/* ============== لغة الواجهة ============== */
+function setLanguage(lang, showNote=true){
+  currentLang = lang;
+  savePreferences();
+
+  setSafeText('.title-text', uiTexts[lang].title);
+  setSafeText('.settings-title', uiTexts[lang].settingsTitle);
+  setSafeHTML('[for="darkModeToggle"] .setting-label', `<i class="fas fa-moon"></i> ${uiTexts[lang].darkMode}`);
+  setSafeHTML('[for="soundToggle"] .setting-label', `<i class="fas fa-volume-up"></i> ${uiTexts[lang].sound}`);
+  setSafeHTML('#resetChatBtn', `<i class="fas fa-trash-alt"></i> ${uiTexts[lang].resetChat}`);
+  setSafeHTML('#backToMain', `<i class="fas fa-arrow-left"></i> ${uiTexts[lang].backToMain}`);
+
+  setSafeText(langBadge, lang==='ar' ? 'AR' : 'EN');
+
+  body.classList.remove('arabic-bg','english-bg');
+  body.classList.add(lang==='ar' ? 'arabic-bg' : 'english-bg');
+
+  const qs = uiTexts[lang].questions;
+  $$('.question-btn').forEach((btn,i)=>{ if(qs[i]) btn.textContent = qs[i]; });
+
+  $$('.lang-btn').forEach(btn=> btn.classList.toggle('active', btn.dataset.lang===lang));
+
+  if (showNote && langNotification && langText){
+    langText.textContent = uiTexts[lang].langNotification;
+    langNotification.style.display = 'block';
+    setTimeout(()=> langNotification.style.display = 'none', 2000);
+  }
+}
+
+/* ============== أحداث الواجهة ============== */
+function setupEventListeners(){
+  if (settingsToggle) settingsToggle.addEventListener('click', ()=> settingsPanel?.classList.add('active'));
+  if (closeSettings)  closeSettings.addEventListener('click', ()=> settingsPanel?.classList.remove('active'));
+
+  if (darkModeToggle) darkModeToggle.addEventListener('change', ()=>{
+    isDarkMode = !isDarkMode;
+    body.classList.toggle('dark-theme', isDarkMode);
+    savePreferences();
+  });
+
+  if (soundToggle) soundToggle.addEventListener('change', ()=>{
+    isSoundOn = !isSoundOn;
+    savePreferences();
+    if (isSoundOn && lastBotMessage) speak(lastBotMessage);
+    if (!isSoundOn && synth?.speaking) synth.cancel();
+  });
+
+  if (resetChatBtn) resetChatBtn.addEventListener('click', resetChat);
+ if (backToMain) backToMain.addEventListener('click', (e)=>{
+    e.preventDefault(); // يمنع السلوك الافتراضي
+    settingsPanel?.classList.remove('active'); // يقفل البانل
+    window.location.href = "protofile.html"; // هنا رابط صفحتك
+});
+
+  questionButtons.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const qNum = btn.getAttribute('data-question');
+      const qTxt = btn.textContent || '';
+      addMessage('user', qTxt);
+      lastBotMessage = "";
+
+      showTypingIndicator();
+      if (isSoundOn) playSound();
+
+      setTimeout(()=>{
+        removeTypingIndicator();
+        const res = currentLang==='ar' ? responsesAr[qNum] : responsesEn[qNum];
+        lastBotMessage = res;
+        addMessage('bot', res);
+        if (isSoundOn) setTimeout(()=> playSound(), 300);
+      }, 800);
+    });
+  });
+
+  langButtons.forEach(btn => btn.addEventListener('click', ()=> setLanguage(btn.dataset.lang)));
+}
+
+/* ============== صوت إشعار ============== */
+function playSound(){
+  if (!messageSound) return;
+  messageSound.currentTime = 0;
+  messageSound.play().catch(()=>{});
+}
+
+/* ============== رسائل الدردشة ============== */
+function showWelcomeMessage(){
+  setTimeout(()=>{
+    const msg = uiTexts[currentLang].welcome;
+    addMessage('bot', msg);
+    lastBotMessage = msg;
+  }, 400);
+}
+function addMessage(sender, text){
+  const el = document.createElement('div');
+  el.classList.add('message', `${sender}-message`);
+
+  const now = new Date();
+  const timeString = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+
+  el.innerHTML = `
+    <div>${String(text).replace(/\n/g,'<br>')}</div>
+    <div class="message-time">${timeString}</div>
+  `;
+  chatMessages.appendChild(el);
+  scrollToBottom();
+
+  chatHistory.push({ id:Date.now(), sender, text, timestamp:timeString, lang:currentLang });
+  saveChatHistory();
+
+  if (sender==='bot' && isSoundOn) speak(text);
+}
+function showTypingIndicator(){
+  const t = document.createElement('div');
+  t.id = 'typingIndicator';
+  t.classList.add('typing-indicator');
+  t.innerHTML = `<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>`;
+  chatMessages.appendChild(t);
+  scrollToBottom();
+}
+function removeTypingIndicator(){ document.getElementById('typingIndicator')?.remove(); }
+function scrollToBottom(){ chatMessages.scrollTop = chatMessages.scrollHeight; }
+
+function saveChatHistory(){ localStorage.setItem('nexusChatHistory', JSON.stringify(chatHistory)); }
+function renderChatHistory(){
+  chatMessages.innerHTML = '';
+  chatHistory.forEach(m=>{
+    const el = document.createElement('div');
+    el.classList.add('message', `${m.sender}-message`);
+    el.innerHTML = `
+      <div>${String(m.text).replace(/\n/g,'<br>')}</div>
+      <div class="message-time">${m.timestamp}</div>
+    `;
+    chatMessages.appendChild(el);
+  });
+  scrollToBottom();
+}
+function resetChat(){
+  if (synth?.speaking) synth.cancel();
+  chatHistory = [];
+  localStorage.removeItem('nexusChatHistory');
+  chatMessages.innerHTML = '';
+  lastBotMessage = "";
+  showWelcomeMessage();
+  settingsPanel?.classList.remove('active');
+
+  const msg = currentLang==='ar' ? "تم مسح سجل المحادثة بنجاح!" : "Chat history has been cleared successfully!";
+  addMessage('bot', msg);
+  if (isSoundOn) playSound();
+}
+
+/* ============== تشغيل ============== */
+document.addEventListener('DOMContentLoaded', initApp);
+window.addEventListener('resize', ()=> scrollToBottom());
+</script>
+</body>
+</html>
